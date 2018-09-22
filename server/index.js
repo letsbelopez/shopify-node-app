@@ -32,7 +32,6 @@ const shopifyConfig = {
   shopStore: new MemoryStrategy(),
   afterAuth(request, response) {
     const { session: { accessToken, shop } } = request;
-
     registerWebhook(shop, accessToken, {
       topic: 'orders/create',
       address: `${SHOPIFY_APP_HOST}/order-create`,
@@ -96,7 +95,6 @@ app.get('/install', (req, res) => res.render('install'));
 
 // Create shopify middlewares and router
 const shopify = ShopifyExpress(shopifyConfig);
-
 // Mount Shopify Routes
 const {routes, middleware} = shopify;
 const {withShop, withWebhook} = middleware;
@@ -110,6 +108,16 @@ app.get('/', withShop({authBaseUrl: '/shopify'}), function(request, response) {
     title: 'Shopify Node App',
     apiKey: shopifyConfig.apiKey,
     shop: shop,
+  });
+});
+
+app.get('/meals', withShop({authBaseUrl: '/shopify'}), function(request, response) {
+  const { session: { shop, accessToken } } = request;
+  
+  response.render('app', {
+    title: 'Shopify Node App',
+    apiKey: shopifyConfig.apiKey,
+    shop: shop
   });
 });
 

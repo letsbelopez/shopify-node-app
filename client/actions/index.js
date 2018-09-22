@@ -1,27 +1,45 @@
-export function updateVerb(verb) {
-  return {
-    type: 'UPDATE_VERB',
-    payload: {
-      verb,
-    },
+export function updateDate(selected) {
+  const path = `/orders.json?processed_at_min=${selected.start.toISOString()}`;
+
+  return dispatch => {
+    dispatch(updatePath(path));
+    dispatch(updateDateRange(selected));
   };
 }
 
-export function updatePath(path) {
+export function updateVerb(verb) {
   return {
-    type: 'UPDATE_PATH',
+    type: "UPDATE_VERB",
     payload: {
-      path,
-    },
+      verb
+    }
+  };
+}
+
+function updateDateRange(selected) {
+  return {
+    type: "UPDATE_DATERANGE",
+    payload: {
+      selected
+    }
+  };
+}
+
+function updatePath(path) {
+  return {
+    type: "UPDATE_PATH",
+    payload: {
+      path
+    }
   };
 }
 
 export function updateParams(params) {
   return {
-    type: 'UPDATE_PARAMS',
+    type: "UPDATE_PARAMS",
     payload: {
-      params,
-    },
+      params
+    }
   };
 }
 
@@ -31,14 +49,14 @@ export function sendRequest(requestFields) {
   const fetchOptions = {
     method: verb,
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json"
     },
-    credentials: 'include',
-  }
+    credentials: "include"
+  };
 
-  if (verb !== 'GET') {
-    fetchOptions['body'] = params
+  if (verb !== "GET") {
+    fetchOptions["body"] = params;
   }
 
   return dispatch => {
@@ -55,27 +73,43 @@ export function sendRequest(requestFields) {
 
 function requestStartAction() {
   return {
-    type: 'REQUEST_START',
-    payload: {},
+    type: "REQUEST_START",
+    payload: {}
   };
 }
 
 function requestCompleteAction(json) {
-  const responseBody = JSON.stringify(json, null, 2);
+  console.log(json);
+  const productQuantities = json.orders
+    .reduce((obj, order) => {
+      return [...obj, ...order.line_items];
+    }, [])
+    .reduce((obj, item) => {
+      const { name, quantity } = item;
+      if (!obj[name]) {
+        obj[name] = 0;
+      }
+      obj[name] += quantity;
+      return obj;
+    }, {});
+
+  const responseBody = Object.keys(productQuantities).map(key => {
+    return [key, productQuantities[key]];
+  });
 
   return {
-    type: 'REQUEST_COMPLETE',
+    type: "REQUEST_COMPLETE",
     payload: {
       responseBody
-    },
+    }
   };
 }
 
 function requestErrorAction(requestError) {
   return {
-    type: 'REQUEST_ERROR',
+    type: "REQUEST_ERROR",
     payload: {
-      requestError,
-    },
+      requestError
+    }
   };
 }

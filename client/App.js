@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Page, AppProvider } from '@shopify/polaris';
-
-import ApiConsole from './components/ApiConsole'
+import { AppProvider } from '@shopify/polaris';
+import Router from './components/Router';
 
 class App extends Component {
   render() {
@@ -9,13 +8,7 @@ class App extends Component {
 
     return (
       <AppProvider shopOrigin={shopOrigin} apiKey={apiKey}>
-        <Page
-          title="My application"
-          breadcrumbs={[{ content: 'Home', url: '/foo' }]}
-          primaryAction={{ content: 'Add something' }}
-        >
-          <ApiConsole />
-        </Page>
+        <Router />
       </AppProvider>
     );
   }

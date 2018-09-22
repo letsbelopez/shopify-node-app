@@ -3,16 +3,8 @@ import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
 
 const requestFields = {
-  verb: 'POST',
-  path: '/products.json',
-  params: JSON.stringify({
-    product: {
-      title: "Burton Custom Freestyle 151",
-      body_html: "<strong>Good snowboard!<\/strong>",
-      vendor: "Burton",
-      product_type: "Snowboard"
-    }
-  }, null, 2)
+  verb: 'GET',
+  path: `/orders.json?processed_at_max=${new Date().toISOString()}&processed_at_min=${new Date().toISOString()}`
 };
 
 const initState = {
@@ -20,10 +12,19 @@ const initState = {
   requestInProgress: false,
   requestError: null,
   responseBody: '',
+  dateRange: {
+    start: new Date(),
+    end: new Date()
+  }
 };
 
 function reducer(state = initState, action) {
   switch (action.type) {
+    case 'UPDATE_DATERANGE':
+      return {
+        ...state,
+        dateRange: action.payload.selected
+      }
     case 'UPDATE_VERB':
       return {
         ...state,

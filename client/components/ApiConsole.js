@@ -61,7 +61,7 @@ class ApiConsole extends Component {
 
   renderResponse() {
     const { requestInProgress, requestError, responseBody } = this.props;
-
+    console.log(responseBody);
     if (responseBody === '') {
       return null;
     }
