@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Card, DataTable, Spinner } from "@shopify/polaris";
+import { formatDate } from "../../helpers";
 
 class OrderTotalsTable extends Component {
   onSort = (headingIndex, direction) => {
@@ -32,6 +33,15 @@ class OrderTotalsTable extends Component {
   render() {
     const orders = this.props.responseBody;
     const requestInProgress = this.props.requestInProgress;
+    const date = this.props.dateRange.start;
+
+    const dateRangeMessage = () => {
+      return (
+        <p>
+          Meals ordered from {formatDate(date)} to {formatDate(Date.now())}
+        </p>
+      );
+    };
 
     if (requestInProgress) {
       return (
@@ -45,9 +55,14 @@ class OrderTotalsTable extends Component {
 
     if (orders === "" || orders.length <= 0) {
       return (
-        <Card title="No orders found" sectioned>
-          <p>Try selecting or changing the date</p>
-        </Card>
+        <React.Fragment>
+          <Card title="Meal order totals" sectioned>
+            {dateRangeMessage()}
+          </Card>
+          <Card title="No orders found" sectioned>
+            <p>Try selecting or changing the date</p>
+          </Card>
+        </React.Fragment>
       );
     }
 
@@ -56,24 +71,30 @@ class OrderTotalsTable extends Component {
     }, 0);
 
     return (
-      <Card>
-        <DataTable
-          columnContentTypes={["text", "numeric"]}
-          headings={["Meal", "Quantity"]}
-          sortable={[true, true]}
-          defaultSortDirection="descending"
-          onSort={this.onSort}
-          rows={orders}
-          totals={["", totalProducts]}
-          footerContent="by David Lopez"
-        />
-      </Card>
+      <React.Fragment>
+        <Card title="Meal order totals" sectioned>
+          {dateRangeMessage()}
+        </Card>
+        <Card>
+          <DataTable
+            columnContentTypes={["text", "numeric"]}
+            headings={["Meal", "Quantity"]}
+            sortable={[true, true]}
+            defaultSortDirection="descending"
+            onSort={this.onSort}
+            rows={orders}
+            totals={["", totalProducts]}
+            footerContent="by David Lopez"
+          />
+        </Card>
+      </React.Fragment>
     );
   }
 }
 
-function mapStateToProps({ requestInProgress, responseBody }) {
+function mapStateToProps({ dateRange, requestInProgress, responseBody }) {
   return {
+    dateRange,
     requestInProgress,
     responseBody
   };

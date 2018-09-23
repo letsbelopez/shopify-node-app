@@ -6,9 +6,10 @@ import {
   Select,
   TextField
 } from "@shopify/polaris";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import OrderTotalsForm from "./OrderTotalsForm";
+import { formatDate } from "../../helpers";
 
 class DatePopover extends Component {
   state = {
@@ -21,21 +22,13 @@ class DatePopover extends Component {
     });
   };
 
-  // handleTagChange = value => {
-  //   this.setState({
-  //     tagValue: value
-  //   });
-  // };
-
   render() {
-    const dateRange = this.props.dateRange;
-    const year = dateRange.start.getFullYear();
-    const month = dateRange.start.getMonth() + 1;
-    const date = dateRange.start.getDate();
+    const formatedDate = formatDate(this.props.dateRange.start);
 
     const activator = (
       <Button onClick={this.togglePopover} disclosure>
-        {`${year}-${month}-${date}`}
+        {/* {`${year}-${month}-${date}`} */}
+        {formatedDate}
       </Button>
     );
 

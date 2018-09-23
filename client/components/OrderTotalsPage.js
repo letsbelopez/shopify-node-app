@@ -12,6 +12,10 @@ class OrderTotalsPage extends Component {
     dispatch(sendRequest(requestFields));
   };
 
+  componentDidMount() {
+    this.handleClick();
+  }
+
   render() {
     return (
       <Page>
