@@ -29,17 +29,20 @@ class OrderTotalsPage extends Component {
     };
 
     return (
-      <Page
-        title="Total Meals"
-        primaryAction={{ content: "Get meals", onAction: this.handleClick }}
-      >
+      <Page title="Total Meals">
         <Layout>
           <Layout.Section>
-            <Card title="Search criteria">
+            <Card
+              title="Search criteria"
+              primaryFooterAction={{
+                content: "Get meals",
+                onAction: this.handleClick
+              }}
+            >
               <Card.Section title="Choose date">
                 Select meals ordered from <DatePopover /> to today.{" "}
               </Card.Section>
-              <Card.Section subdued title="Selected range">
+              <Card.Section title="Selected range">
                 {dateRangeMessage()}
               </Card.Section>
             </Card>
