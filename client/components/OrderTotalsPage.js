@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Page, Layout, Button } from "@shopify/polaris";
+import { Page, Layout, Button, Card } from "@shopify/polaris";
 import { connect } from "react-redux";
 import { sendRequest } from "../actions";
 
 import OrderTotalsTable from "./OrderTotalsTable";
 import DatePopover from "./DatePopover";
+import { formatDate } from "../../helpers";
 
 class OrderTotalsPage extends Component {
   handleClick = () => {
@@ -17,14 +18,31 @@ class OrderTotalsPage extends Component {
   }
 
   render() {
+    const date = this.props.dateRange.start;
+    const dateRangeMessage = () => {
+      const selectedDate = formatDate(date);
+      const today = formatDate(Date.now());
+      const message =
+        selectedDate === today ? "today" : `from ${selectedDate} to ${today}`;
+
+      return <p>{`Meals ordered ${message}`}</p>;
+    };
+
     return (
-      <Page>
+      <Page
+        title="Total Meals"
+        primaryAction={{ content: "Get meals", onAction: this.handleClick }}
+      >
         <Layout>
           <Layout.Section>
-            Total meals ordered on <DatePopover /> or after.{" "}
-            <Button primary onClick={this.handleClick}>
-              Get orders
-            </Button>
+            <Card title="Search criteria">
+              <Card.Section title="Choose date">
+                Select meals ordered from <DatePopover /> to today.{" "}
+              </Card.Section>
+              <Card.Section subdued title="Selected range">
+                {dateRangeMessage()}
+              </Card.Section>
+            </Card>
           </Layout.Section>
           <Layout.Section>
             <OrderTotalsTable />
@@ -35,8 +53,9 @@ class OrderTotalsPage extends Component {
   }
 }
 
-function mapStateToProps({ requestFields }) {
+function mapStateToProps({ dateRange, requestFields }) {
   return {
+    dateRange,
     requestFields
   };
 }
