@@ -46,7 +46,7 @@ class OrderTotalsTable extends Component {
     if (orders === "" || orders.length <= 0) {
       return (
         <React.Fragment>
-          <Card title="No orders found" sectioned>
+          <Card title="No meals found" sectioned>
             <p>Try selecting or changing the date</p>
           </Card>
         </React.Fragment>

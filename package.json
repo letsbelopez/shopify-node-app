@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prod": "yarn run clean && yarn run build && cross-env NODE_ENV=production yarn run start",
-    "dev": "cross-env NODE_ENV=development yarn run start",
-    "start": "nodemon ./bin/www",
-    "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --progress --profile --colors",
+    "build": "yarn run clean && yarn run compile && cross-env NODE_ENV=production yarn run start",
+    "dev": "cross-env NODE_ENV=development yarn run start:dev",
+    "start": "node ./bin/www",
+    "start:dev": "nodemon ./bin/www",
+    "compile": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.js --progress --profile --colors",
     "clean": "rm -rf ./assets && mkdir ./assets",
     "pretty": "prettier --single-quote --trailing-comma es5 --write {client,bin,config,server}{/*,/**/*}.js",
     "precommit": "yarn run pretty"

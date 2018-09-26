@@ -35,7 +35,7 @@ class OrderTotalsPage extends Component {
             <Card
               title="Search criteria"
               primaryFooterAction={{
-                content: "Get meals",
+                content: "Total meals",
                 onAction: this.handleClick
               }}
             >
