@@ -7,6 +7,12 @@ export function updateDate(selected) {
   };
 }
 
+export function updateMetafields(path) {
+  return dispatch => {
+    dispatch(updatePath(path));
+  };
+}
+
 export function updateVerb(verb) {
   return {
     type: "UPDATE_VERB",
@@ -71,6 +77,34 @@ export function sendRequest(requestFields) {
   };
 }
 
+export function sendOrdersRequest(requestFields) {
+  const { verb, path, params } = requestFields;
+
+  const fetchOptions = {
+    method: verb,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    credentials: "include"
+  };
+
+  if (verb !== "GET") {
+    fetchOptions["body"] = params;
+  }
+
+  return dispatch => {
+    dispatch(requestStartAction());
+
+    return fetch(`/shopify/api${path}`, fetchOptions)
+      .then(response => response.json())
+      .then(json => dispatch(requestCompleteOrdersAction(json.orders)))
+      .catch(error => {
+        dispatch(requestErrorAction(error));
+      });
+  };
+}
+
 function requestStartAction() {
   return {
     type: "REQUEST_START",
@@ -79,8 +113,18 @@ function requestStartAction() {
 }
 
 function requestCompleteAction(json) {
-  console.log(json);
-  const productQuantities = json.orders
+  const responseBody = json;
+
+  return {
+    type: "REQUEST_COMPLETE",
+    payload: {
+      responseBody
+    }
+  };
+}
+
+function requestCompleteOrdersAction(json) {
+  const productQuantities = json
     .reduce((obj, order) => {
       return [...obj, ...order.line_items];
     }, [])

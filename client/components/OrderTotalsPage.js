@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Page, Layout, Button, Card } from "@shopify/polaris";
 import { connect } from "react-redux";
-import { sendRequest } from "../actions";
+import { sendOrdersRequest } from "../actions";
 
 import OrderTotalsTable from "./OrderTotalsTable";
 import DatePopover from "./DatePopover";
@@ -10,7 +10,7 @@ import { formatDate } from "../../helpers";
 class OrderTotalsPage extends Component {
   handleClick = () => {
     const { dispatch, requestFields } = this.props;
-    dispatch(sendRequest(requestFields));
+    dispatch(sendOrdersRequest(requestFields));
   };
 
   componentDidMount() {

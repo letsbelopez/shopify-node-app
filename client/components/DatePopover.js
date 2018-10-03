@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Popover,
-  FormLayout,
-  Select,
-  TextField
-} from "@shopify/polaris";
+import { Button, Popover } from "@shopify/polaris";
 import { connect } from "react-redux";
 
 import OrderTotalsForm from "./OrderTotalsForm";
@@ -27,7 +21,6 @@ class DatePopover extends Component {
 
     const activator = (
       <Button onClick={this.togglePopover} disclosure>
-        {/* {`${year}-${month}-${date}`} */}
         {formatedDate}
       </Button>
     );

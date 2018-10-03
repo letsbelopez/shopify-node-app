@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Layout, Stack, Card, TextField, Button } from '@shopify/polaris';
 import ObjectInspector from 'react-object-inspector';
-import { updatePath, updateParams, sendRequest } from '../actions';
+import { updateMetafields, updateParams, sendRequest } from '../actions';
 
 import VerbPicker from './VerbPicker';
 
@@ -27,7 +27,7 @@ class ApiConsole extends Component {
             <VerbPicker verb={requestFields.verb} />
             <TextField
               value={requestFields.path}
-              onChange={path => dispatch(updatePath(path))}
+              onChange={path => dispatch(updateMetafields(path))}
             />
             <Button primary onClick={() => dispatch(sendRequest(requestFields))}>
               Send

@@ -5,7 +5,6 @@ import { Card, DataTable, Spinner } from "@shopify/polaris";
 class OrderTotalsTable extends Component {
   onSort = (headingIndex, direction) => {
     const orders = this.props.responseBody;
-
     if (direction === "ascending") {
       orders.sort((a, b) => {
         if (a[headingIndex] < b[headingIndex]) {
@@ -28,6 +27,27 @@ class OrderTotalsTable extends Component {
       });
     }
   };
+
+  renderTable() {
+    const orders = this.props.responseBody;
+
+    const totalProducts = orders.reduce((total, row) => {
+      return (total += row[1]);
+    }, 0);
+
+    return (
+      <DataTable
+        columnContentTypes={["text", "numeric"]}
+        headings={["Meal", "Quantity"]}
+        sortable={[true, true]}
+        defaultSortDirection="descending"
+        onSort={this.onSort}
+        rows={orders}
+        totals={["", totalProducts]}
+        footerContent="by David Lopez"
+      />
+    );
+  }
 
   render() {
     const orders = this.props.responseBody;
@@ -53,24 +73,9 @@ class OrderTotalsTable extends Component {
       );
     }
 
-    const totalProducts = orders.reduce((total, row) => {
-      return (total += row[1]);
-    }, 0);
-
     return (
       <React.Fragment>
-        <Card>
-          <DataTable
-            columnContentTypes={["text", "numeric"]}
-            headings={["Meal", "Quantity"]}
-            sortable={[true, true]}
-            defaultSortDirection="descending"
-            onSort={this.onSort}
-            rows={orders}
-            totals={["", totalProducts]}
-            footerContent="by David Lopez"
-          />
-        </Card>
+        <Card>{this.renderTable()}</Card>
       </React.Fragment>
     );
   }
