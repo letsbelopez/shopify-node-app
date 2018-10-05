@@ -147,6 +147,21 @@ app.get("/meals", withShop({ authBaseUrl: "/shopify" }), function(
   });
 });
 
+app.get("/apiconsole", withShop({ authBaseUrl: "/shopify" }), function(
+  request,
+  response
+) {
+  const {
+    session: { shop, accessToken }
+  } = request;
+
+  response.render("app", {
+    title: "Shopify Node App",
+    apiKey: shopifyConfig.apiKey,
+    shop: shop
+  });
+});
+
 app.post(
   "/order-create",
   withWebhook((error, request) => {

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Page, Layout } from "@shopify/polaris";
 import queryString from "query-string";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import ApiConsole from "./ApiConsole";
+import { getMetafields, updateMetafield } from "../actions";
 
 class MealsPage extends Component {
   state = {
@@ -11,52 +12,22 @@ class MealsPage extends Component {
 
   componentDidMount() {
     const query = queryString.parse(this.props.location.search);
-    const { dispatch, requestFields } = this.props;
+    const { dispatch, metafields } = this.props;
 
-    // const fetchOptions = {
-    //   method: "GET",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json"
-    //   },
-    //   credentials: "include"
-    // };
+    const metafield = JSON.stringify({
+      metafield: {
+        value: JSON.stringify({ steak: "4oz" }),
+        value_type: "json_string"
+      }
+    });
 
-    // const fetchOptionsUpdate = {
-    //   method: "PUT",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json"
-    //   },
-    //   credentials: "include",
-    //   body: {
-    //     "metafield": {
-    //       "value": "4oz",
-    //       "value_type": "string"
-    //     }
-    //   }
-    // };
-
-    // fetch(
-    //   "/shopify/api/products/1515921211490/metafields/4253431562338.json",
-    //   fetchOptionsUpdate
-    // )
-    //   .then(response => response.json())
-    //   .then(object => {
-    //     console.log(object);
-    //   });
-
-    // fetch(`/shopify/api/products/${query.id}/metafields.json`, fetchOptions)
-    //   .then(response => response.json())
-    //   .then(object => {
-    //     const ingredientMetafield = object.metafields.filter(
-    //       metafield => metafield.namespace === "bemorefit"
-    //     );
-    //     console.log(ingredientMetafield);
-    //     const ingredients = JSON.parse(ingredientMetafield[0].value);
-    //     console.log(ingredients);
-    //     this.setState({ ingredients });
-    //   });
+    // Practice if I can do a PUT
+    if (query.id) {
+      dispatch(updateMetafield(query.id, 4253431562338, metafield));
+      dispatch(getMetafields(query.id));
+    } else {
+      console.error("No meal id found");
+    }
   }
 
   render() {
@@ -73,17 +44,11 @@ class MealsPage extends Component {
   }
 }
 
-function mapStateToProps({
-  requestFields,
-  requestInProgress,
-  requestError,
-  responseBody,
-}) {
+function mapStateToProps({ requestInProgress, requestError, metafields }) {
   return {
-    requestFields,
     requestInProgress,
     requestError,
-    responseBody,
+    metafields
   };
 }
 
