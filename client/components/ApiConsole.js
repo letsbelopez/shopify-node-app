@@ -26,6 +26,7 @@ class ApiConsole extends Component {
           <Stack>
             <VerbPicker verb={requestFields.verb} />
             <TextField
+              label="Path"
               value={requestFields.path}
               onChange={path => dispatch(updatePath(path))}
             />

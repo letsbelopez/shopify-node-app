@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const fs = require("fs");
 const express = require("express");
+var redis = require("redis");
 const session = require("express-session");
 const RedisStore = require("connect-redis")(session);
 const path = require("path");
@@ -24,8 +25,25 @@ const {
   SHOPIFY_APP_KEY,
   SHOPIFY_APP_HOST,
   SHOPIFY_APP_SECRET,
+  REDIS_HOSTNAME,
+  REDIS_PORT,
+  REDIS_PASS,
   NODE_ENV
 } = process.env;
+
+var client = redis.createClient({
+  port: REDIS_PORT, // replace with your port
+  host: REDIS_HOSTNAME, // replace with your hostanme or IP address
+  password: REDIS_PASS
+});
+
+const redisConfig = {
+  host: REDIS_HOSTNAME,
+  port: REDIS_PORT,
+  client: client,
+  password: REDIS_PASS,
+  ttl: 260
+};
 
 const isDevelopment = NODE_ENV !== "production";
 
@@ -34,7 +52,9 @@ const shopifyConfig = {
   apiKey: SHOPIFY_APP_KEY,
   secret: SHOPIFY_APP_SECRET,
   scope: ["write_orders, write_products"],
-  shopStore: isDevelopment ? new MemoryStrategy() : new RedisStrategy(),
+  shopStore: isDevelopment
+    ? new MemoryStrategy()
+    : new RedisStrategy(redisConfig),
   afterAuth(request, response) {
     const {
       session: { accessToken, shop }
@@ -74,7 +94,7 @@ app.set("view engine", "ejs");
 app.use(logger("dev"));
 app.use(
   session({
-    store: isDevelopment ? undefined : new RedisStore(),
+    store: isDevelopment ? undefined : new RedisStore(redisConfig),
     secret: SHOPIFY_APP_SECRET,
     resave: true,
     saveUninitialized: false

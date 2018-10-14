@@ -49,6 +49,15 @@ export function updateParams(params) {
   };
 }
 
+export function updateIngredients(ingredients) {
+  return {
+    type: "UPDATE_INGREDIENTS",
+    payload: {
+      ingredients
+    }
+  };
+}
+
 export function sendRequest(requestFields) {
   const { verb, path, params } = requestFields;
 
@@ -105,57 +114,6 @@ export function sendOrdersRequest(requestFields) {
   };
 }
 
-export function getMetafields(productId) {
-  const fetchOptions = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    credentials: "include"
-  };
-
-  return dispatch => {
-    dispatch(requestStartAction());
-
-    return fetch(
-      `/shopify/api/products/${productId}/metafields.json`,
-      fetchOptions
-    )
-      .then(response => response.json())
-      .then(json => dispatch(requestCompleteMetafieldsAction(json)))
-      .catch(error => {
-        dispatch(requestErrorAction(error));
-      });
-  };
-}
-
-export function updateMetafield(productId, metafieldId, metafield) {
-  const fetchOptions = {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: metafield
-  };
-
-  return dispatch => {
-    dispatch(requestStartAction());
-
-    return fetch(
-      `/shopify/api/products/${productId}/metafields/${metafieldId}.json`,
-      fetchOptions
-    )
-      .then(response => response.json())
-      .then(json => dispatch(requestCompleteAction(json)))
-      .catch(error => {
-        dispatch(requestErrorAction(error));
-      });
-  };
-}
-
 function requestStartAction() {
   return {
     type: "REQUEST_START",
@@ -196,17 +154,6 @@ function requestCompleteOrdersAction(json) {
     type: "REQUEST_COMPLETE",
     payload: {
       responseBody
-    }
-  };
-}
-
-function requestCompleteMetafieldsAction(json) {
-  const metafields = json.metafields;
-
-  return {
-    type: "REQUEST_COMPLETE_METAFIELDS",
-    payload: {
-      metafields
     }
   };
 }

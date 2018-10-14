@@ -12,7 +12,8 @@ const initState = {
   requestInProgress: false,
   requestError: null,
   responseBody: "",
-  metafields: null,
+  metafields: {},
+  ingredients: {},
   dateRange: {
     start: new Date(),
     end: new Date()
@@ -66,13 +67,6 @@ function reducer(state = initState, action) {
         requestInProgress: false,
         requestError: null,
         responseBody: action.payload.responseBody
-      };
-    case "REQUEST_COMPLETE_METAFIELDS":
-      return {
-        ...state,
-        requestInProgress: false,
-        requestError: null,
-        metafields: action.payload.metafields
       };
     case "REQUEST_ERROR":
       return {
